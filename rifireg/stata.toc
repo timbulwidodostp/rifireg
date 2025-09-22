@@ -1,0 +1,5 @@
+0
+1
+2
+3
+p theildeco Produce refined Theil index decomposition by group and quantile Use theildeco With STATA 19

@@ -1,0 +1,152 @@
+{smcl}
+{* *! version 0.1  Oct 2015 - Gawain Heckley}{É}
+{cmd:help rifireg}, {right:dialogs:  {bf:{dialog rifireg}} }
+{hline}
+
+{title:Title}
+
+{p2colset 5 17 19 2}{...}
+{p2col :{hi:[R] rifireg} {hline 2}}Recentered Influence Function (RIF) for (bivariate) rank dependent indices (I) regression{p_end}
+{p2colreset}{...}
+
+{title:Syntax}
+
+{phang}
+Recentered Influence Function (RIF) I regression
+
+{p 8 13 2}
+{cmd:rifireg} {depvar} [{indepvars}] {ifin} 
+	[{cmd:,} {it:{help rifireg##rifireg_options:rifireg_options}}]
+
+{synoptset 25 tabbed}{...}
+{marker rifreg_options}{...}
+{synopthdr :rifreg_options}
+{synoptline}
+{syntab :Model}
+{synopt :{opt agi:ni}} specifies the absolute GINI {p_end}
+{synopt :{opt g:ini}} specifies the GINI {p_end}
+{synopt :{opt aci:ndex}} specifies the Absolute Concentration index (alternatively referred to as the generalised concentration index) {p_end}
+{synopt :{opt ein:dex}} specifies the Erreygers index {p_end}
+{synopt :{opt cin:dex}} specifies the Concentration index {p_end}
+{synopt :{opt arci:ndex}} specifies the Attainment relative concentration index {p_end}
+{synopt :{opt srci:ndex}} specifies the Shortfall relative concentration index {p_end}
+{synopt :{opt wi:ndex}} specifies the Wagstaff index {p_end}
+
+
+
+{syntab :Bivariate rank dependent index options}
+{synopt :{opt rankv(varname)}} ranking variable (required for bivariate indices {p_end}
+{synopt :{opt ub:ound(#)}} Theoretical upper bound of bounded health variable {p_end}
+{synopt :{opt lb:ound(#)}} Theoretical lower bound of bounded health variable {p_end}
+{synopt :{opt re:tain(string)}} Retain RIF vector: save the calculated values of the RIF function into variable {it:string}, but only for values conditioned by {it:[if]} and {it:[in]}{p_end}
+
+{syntab :Reporting}
+{synopt :{opt l:evel(#)}} Set the confidence level to #{p_end}
+{synopt :{opt bo:otstrap}} Generate bootstrapped standard errors, with a default of 50 repetitions{p_end}
+{synopt :{opt reps}} Number of repetitions used for boostrapping must be less than the maximum matrix size {help matsize} {p_end}
+
+{synoptline}
+{p2colreset}{...}
+{pstd}
+
+
+
+{title:Description}
+
+{pstd}
+{cmd:rifireg} is an extension of {cmd:rifreg} to bivariate rank dependent indices (for the variance and quantiles use {cmd:rifreg}). It fits a linear regression model of the re-centered influence function (RIF) of a rank dependent index of the joint marginal distribution of the {depvar} and ranking variable on {indepvars}. The influence function is a widely used tool in robust estimation; here it is recentered so the mean of the recentered influence function corresponds to the statistic of interest.
+In RIF-regressions, the {depvar} is replaced by the corresponding RIF of the statistic of interest.
+
+{title:Options for rifireg}
+
+{dlgtab:Model}
+
+{phang}{opt agi:ni} specifies the Absolute Gini as the distributional statistic of interest (sometimes referred to as the generalised Gini) {p_end}
+
+{phang}{opt g:ini} specifies the Gini as the distributional statistic of interest {p_end}
+
+{phang}{opt aci:ndex} specifies the Absolute Concentration index as the distributional statistic of interest {p_end}
+
+{phang}{opt ein:dex} specifies the Erreygers index as the distributional statistic of interest 
+{p_end}
+
+{phang}{opt cin:dex} specifies the Concentration index as the distributional statistic of interest {p_end}
+
+{phang}{opt arci:ndex} specifies the Attainment relative concentration index as the distributional statistic of interest {p_end}
+
+{phang}{opt srci:ndex} specifies the Shortfall relative concentration index as the distributional statistic of interest {p_end}
+
+{phang}{opt wi:ndex} specifies the Wagstaff index as the distributional statistic of interest {p_end}
+
+
+{dlgtab:Bivariate rank dependent index options}
+
+{phang}{opt rankv:(varname)} specifies the variable used to rank each individual. This must be specified for all bivariate rank dependent indices
+
+{phang}{opt lb:ound(#)} specifies the theoretical lower bound of the dependent variable if the dependent variable is bounded. This must be specified if using a bivariate rank dependent index for bounded measures
+
+{phang}{opt ub:ound(#)} specifies the theoretical upper bound of the dependent variable if the dependent variable is bounded. This must be specified if using a bivariate rank dependent index for bounded measures
+
+{phang}{opt re:tain(string)} Retain RIF vector: save the calculated RIF function values into variable {it:string}, but only for values conditioned by {it:[if]} and {it:[in]}, with others set to '.'. This is useful for graphical analysis of the RIF function and even Oaxaca type decompositions.
+
+{dlgtab:Reporting}
+
+{phang}{opt l:evel} Set the confidence interval for output
+
+{phang}{opt bo:otstrap} Generate bootstrapped standard errors, with a default of 49 repetitions{p_end}
+
+{phang}{opt reps} Number of repetitions used for bootstrapping, must be less than the maximum matrix size {help matsize} {p_end}
+
+{title:Examples}
+
+{p 4 4 2} {ul:Single RIFÑI-regressions}
+
+{phang}{cmd:. rifireg y x1 x2 x3, cindex rankv(income) }
+
+{phang}{cmd:. rifireg qaly educ age gender , eindex rankv(income) lb(0) ub(1) }
+
+{phang}{cmd:. rifireg qaly x1 x2 x3 , arcindex rankv(years_schooling)lb(0) ub(1)} {p_end}
+{phang}{cmd:. display "ARCindex: `e(arcindex)'} {p_end}
+
+
+{p 4 4 2} {ul:Using bootstrapping }
+
+{phang}{cmd:. rifireg y x1 x2 x3, agini bootstrap reps(999)} {p_end}
+{phang}{cmd:. rifireg y x1 x2 x3, cindex rankv(income) bootstrap reps(999)}{p_end}
+
+
+{p 4 4 2} {ul:Multiple RIFÑI-regressions}
+
+{p 4 4 2} When one wants to decompose more than one statistic, the following loop can be used  {p_end}
+
+{phang}{cmd:. local statistic eindex arcindex srcindex}{p_end}
+{phang}{cmd:. foreach v of local statistic}  {cmd:{c -(}} {p_end}
+{phang}{cmd:.	  rifireg qaly educ age gender, «v' rankv(income) lb(0) ub(1)} {p_end}
+{phang}{cmd:.} {cmd:{c )-}} {p_end}
+
+
+
+{pstd}
+
+{title:References}
+
+{p 4 8 2} Firpo, Sergio, Nicole Fortin and Thomas Lemieux, "Unconditional Quantiles Regressions," NBER Technical Paper T339, July 2007.
+ Published as in {it: Econometrica,} 77 (May 2009):  953–973.
+ {p_end}
+
+{p 4 8 2} Fortin, Nicole, Thomas Lemieux and Sergio Firpo, "Decomposition Methods", (with T. Lemieux and S. Firpo),  in O. Ashenfelter and D. Card (eds.) 
+Handbook of Labor Economics, Vol. 4A, Amsterdam: North-Holland , 2011, 1-102.
+ {p_end}
+  
+
+{p 4 8 2} Heckley, Gawain, Ulf-G. Gerdtham, and Gustav Kjellsson. "A general method for decomposing the causes of socioeconomic inequality in health." Journal of health economics 48 (2016): 89-106.
+ {p_end}
+
+
+{title:Also see}
+
+{psee}
+Online:  {helpb regress}
+Online: {helpb rifreg}
+{p_end}
+{* $Id: rifireg.hlp,v 0.1 2015/10/10 15:56:28 mgevaert Exp mgevaert $ }
