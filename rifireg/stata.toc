@@ -2,4 +2,4 @@
 1
 2
 3
-p theildeco Produce refined Theil index decomposition by group and quantile Use theildeco With STATA 19
+p rifireg Recentered Influence Function (RIF) for (bivariate) rank dependent indices (I) regression Use rifireg With STATA 19
